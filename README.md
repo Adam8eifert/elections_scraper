@@ -1,62 +1,88 @@
-# Projekt Elections Scraper
+🗳️ Elections Scraper (Czech Parliamentary Elections 2017)
+A Python-based web scraping tool designed to extract and process election results from the official Czech Statistical Office website (volby.cz). It automates the collection of data for specific territorial units and exports it into a structured CSV format.
 
-Třetí projekt do Engeto Online Python Akademie - scraper výsledků voleb z roku 2017.
+🇬🇧 English Version
+🎯 Project Overview
+This tool simplifies the acquisition of election data for the 2017 Parliamentary Elections. By providing a specific territorial URL, the script crawls through all municipalities within that unit, collects voter participation metrics, and tallies votes for all competing political parties.
 
-## Popis projektu
+✨ Key Features
+Automated Data Extraction: Scrapes codes, names, and results for all municipalities in a selected region.
 
-Tento program stahuje výsledky parlamentních voleb z roku 2017 pro vybraný územní celek z webu [volby.cz](https://volby.cz/). Data ukládá do CSV souboru pro další zpracování.
+Complete Results: Captures registered voters, issued envelopes, and total valid votes.
 
-## Instalace knihoven
+Dynamic Party Mapping: Automatically identifies all competing parties and assigns their respective vote counts.
 
-Pro správný běh programu je potřeba mít nainstalované knihovny uvedené v souboru `requirements.txt`. Pro instalaci použijte příkaz:
+CSV Export: Generates a ready-to-use dataset for further statistical analysis.
 
-```
+🛠️ Tech Stack
+Language: Python 3.x
+
+Libraries: * requests (for HTTP requests)
+
+beautifulsoup4 (for HTML parsing)
+
+🚀 Usage
+Install Dependencies:
+
+Bash
+
 pip install -r requirements.txt
-```
+Run the Scraper: Provide the territorial URL (from volby.cz) and the desired output filename as arguments:
 
-## Spuštění programu
+Bash
 
-Program se spouští z příkazové řádky dvěma povinnými argumenty:
+python main.py "URL_ADDRESS" "output_filename.csv"
+🇨🇿 Česká verze
+📌 Popis projektu
+Tento program automatizuje stahování výsledků parlamentních voleb z roku 2017. Uživatel zadá URL adresu konkrétního územního celku a program následně projde všechny obce, posbírá data o volební účasti a hlasy pro jednotlivé strany.
 
-```
-python main.py "url_uzemniho_celku" <vystupni_soubor.csv>
-```
+✨ Funkcionality
+Hromadné zpracování: Automaticky identifikuje všechny obce v daném okrese.
 
-### Argumenty programu
+Strukturovaný výstup: Data o voličích a obálkách jsou přehledně seřazena.
 
-1. `<url_uzemniho_celku>` - URL adresa stránky s výsledky voleb pro územní celek z webu [volby.cz](https://volby.cz/)
-2. `<vystupni_soubor.csv>` - Název výstupního CSV souboru
+Dynamické sloupce: Program sám rozpozná kandidující strany a vytvoří pro ně sloupce v CSV.
 
-### Příklad spuštění
+📊 Ukázka výstupu / Output Example
+Console:
 
-```
-python main.py "https://volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2101" vysledky.csv
-```
+Plaintext
 
-## Ukázka výstupu
-
-Po spuštění programu s výše uvedenými argumenty bude výstup v konzoli vypadat přibližně takto:
-
-```
-Start scrapování: https://volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2101
-Nalezeno obcí: 114
-Zpracovávám (1/114) Benešov
-Zpracovávám (2/114) Bernartice
-
+Scraping: Benešov region...
+Found municipalities: 114
+Processing (1/114) Benešov
+Processing (2/114) Bernartice
 ...
-Zpracovávám (113/114) Zdislavice
-Zpracovávám (114/114) Zvěstov
-Data uložena do: C:\Users\seife\Documents\engeto\projekty\main\vysledky.csv
-```
+Data saved to: results_benesov.csv
+CSV Structure: | code | location | registered | envelopes | valid | ODS | ČSSD | ... | | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | | 529303 | Benešov | 13125 | 8234 | 8192 | 1120 | 540 | ... |
 
-Výstupní CSV soubor bude obsahovat následující sloupce:
-- kód obce
-- název obce
-- počet registrovaných voličů
-- počet vydaných obálek
-- počet platných hlasů
-- sloupce pro jednotlivé kandidující strany s počty hlasů
+💡 Tip pro sekci "About" na GitHubu:
+Automated Python web scraper for the 2017 Czech Parliamentary Elections. Extracts voter statistics and party results into CSV using BeautifulSoup4 and Requests.
 
+🐍 Příklad komentovaného kódu (v angličtině):
+V části, kde získáváš data z tabulky, by kód mohl vypadat takto:
 
+Python
 
+import requests
+from bs4 import BeautifulSoup
 
+def get_municipality_data(url):
+    # Fetch the HTML content from the given municipality URL
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Extract voter participation statistics from the specific table headers
+    registered = soup.find('td', {'headers': 'sa2'}).text
+    envelopes = soup.find('td', {'headers': 'sa3'}).text
+    
+    # Return a dictionary for easy mapping to CSV rows
+    return {
+        "registered": registered.replace('\xa0', ''), # Clean non-breaking spaces
+        "envelopes": envelopes.replace('\xa0', '')
+    }
+👤 Autor / Author: Adam Seifert
+
+Kontakt: seifert.promotion@gmail.com
+
+Projekt vznikl v rámci kurzu Datový Analytik s Pythonem od Engeto.
